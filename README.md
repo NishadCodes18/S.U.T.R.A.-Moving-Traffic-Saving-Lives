@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="static/logo.png" alt="S.U.T.R.A. Logo" width="300">
-</p>
-
 # 🚦 S.U.T.R.A. — Smart Urban Traffic & Response Architecture
 ### **MOVING TRAFFIC | SAVING LIVES**
 
@@ -64,20 +60,6 @@ Use the integrated AI Command Panel on the dashboard to control the node live:
 * `/config` — View current JSON backend parameters.
 * `/reload` — Hot-swap changes made to `config.json` without restarting the server.
 
-## 📄 License
-
-This project is licensed under the GPL-3.0 License.
-
-**Copyright (c) 2026 Nishad Patil, Sandesh Kotwal, Arnav Awatipatil, Sai Chavan, and Devdatta Shahane.**
-Students of **MIT World Peace University (MIT-WPU), Kothrud, Pune**.
-Integrated B.Tech Second Year.
-
-* **Nishad Patil** (Team Lead) — Computer Science Engineering (CSE)
-* **Sandesh Kotwal** — Computer Science Engineering (CSE)
-* **Arnav Awatipatil** — Computer Science Engineering (CSE)
-* **Sai Chavan** — Computer Science Engineering (CSE)
-* **Devdatta Shahane** — Mechanical Engineering (ME)
-  
 ## 📂 Project Structure
 
 ```text
@@ -90,3 +72,16 @@ Integrated B.Tech Second Year.
 ├── templates/          # Dashboard UI (index.html)
 └── yolov8s.pt          # AI Model Weights
 
+## 📄 License
+
+This project is licensed under the MIT License.
+
+**Copyright (c) 2026 Nishad Patil, Sandesh Kotwal, Arnav Awatipatil, Sai Chavan, and Devdatta Shahane.**
+Students of **MIT World Peace University (MIT-WPU), Kothrud, Pune**.
+Integrated B.Tech Second Year.
+
+* **Nishad Patil** (Team Lead) — Computer Science Engineering (CSE)
+* **Sandesh Kotwal** — Computer Science Engineering (CSE)
+* **Arnav Awatipatil** — Computer Science Engineering (CSE)
+* **Sai Chavan** — Computer Science Engineering (CSE)
+* **Devdatta Shahane** — Mechanical Engineering (ME)

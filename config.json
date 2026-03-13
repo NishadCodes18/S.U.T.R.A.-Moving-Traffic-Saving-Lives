@@ -3,7 +3,7 @@
     "index": 0,
     "frame_width": 1280,
     "frame_height": 720,
-    "video_path": ""
+    "video_path": "static/videos/traffic.mp4"
   },
   "model": {
     "path": "yolov8s.pt",
@@ -25,26 +25,15 @@
   },
   "object_classes": {
     "vehicles": ["car", "motorcycle", "truck", "bus"],
-    "emergency_proxy": [], 
-    "animals": ["cow", "dog", "goat", "horse"]
+    "emergency_proxy": ["ambulance", "fire truck"],
+    "animals": ["cow", "dog", "goat", "horse", "sheep"]
   },
   "traffic_controller": {
     "base_phase_duration": 10.0,
     "min_green": 5.0,
     "max_green": 25.0
   },
-  "accident_detection": {
-    "iou_threshold": 0.05,
-    "consecutive_frames": 2,
-    "collision_padding": 40
-  },
   "demo_mode": {
     "enabled": false
-  },
-  "recording": {
-    "enabled": true,
-    "post_seconds": 15,
-    "fps": 10,
-    "sos_min_activations": 1
   }
 }

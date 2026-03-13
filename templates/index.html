@@ -10,46 +10,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
+    <div class="tutorial-overlay" id="tutorialOverlay"></div>
+    <div class="tutorial-tooltip" id="tutorialTooltip">
+        <h3 id="tutorialTitle">Tour Step</h3>
+        <p id="tutorialDesc">Description goes here.</p>
+        <button id="tutorialNextBtn">Next Step</button>
+    </div>
+
     <div class="demo-overlay" id="demoOverlay">
       <div class="demo-overlay-content">
-        <h2>How to Demo S.U.T.R.A.</h2>
-        <ul>
-          <li><strong>Signal for Help (SOS):</strong> Show palm → tuck thumb → make fist 3 times quickly</li>
-          <li><strong>Fire/Ambulance:</strong> Play siren audio (500–3000 Hz) from your phone</li>
-          <li><strong>Festival Mode:</strong> Toggle in India Modes card (procession/festival)</li>
-          <li><strong>Demo Mode:</strong> Add <code>?demo=1</code> to URL or type <code>/demo</code> in AI Command</li>
+        <h2>Welcome to S.U.T.R.A.</h2>
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1);">
+            <h4 style="color: var(--accent-secondary); margin-top:0; margin-bottom: 10px;">🚨 Strict Mode (Vision + Audio)</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;"><strong>OFF (Default):</strong> The signal turns green instantly when the AI sees an ambulance.</p>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);"><strong>ON:</strong> The signal will ONLY turn green if the camera sees an ambulance <strong>AND</strong> the Acoustic Sensor hears a siren.</p>
+        </div>
+        <ul style="margin-left: 20px; margin-bottom: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+          <li style="margin-bottom: 8px;"><strong>Interactive Tutorial:</strong> Type <code>/demo</code> to run the automated dashboard showcase.</li>
+          <li style="margin-bottom: 8px;"><strong>Testing Audio:</strong> Type <code>/use audio</code> in the command box, select the siren file, and press Play.</li>
+          <li style="margin-bottom: 8px;"><strong>Testing Feeds:</strong> Type <code>/use image</code>, <code>/use video</code>, or <code>/use camera</code> to swap sources dynamically.</li>
         </ul>
-        <h3>Config (config.json)</h3>
-        <p><code>camera.video_path</code> – Fallback video when camera fails. <code>accident_detection.consecutive_frames</code> – Frames needed for crash. <code>audio.device_id</code> – Mic for siren.</p>
-        <button type="button" class="demo-overlay-dismiss" id="demoOverlayDismiss">Got it</button>
+        <button type="button" class="demo-overlay-dismiss" id="demoOverlayDismiss" onclick="document.getElementById('demoOverlay').classList.add('hidden');">Acknowledge</button>
       </div>
     </div>
 
     <div class="dashboard-container">
       <header class="top-bar">
         <div class="logo-section">
-          <img src="{{ url_for('static', filename='logo.png') }}" alt="SUTRA Logo" class="brand-logo" />
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="SUTRA Logo" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=S+U&background=0D8ABC&color=fff'" />
           <div class="title-block">
             <h1>S.U.T.R.A. <span class="subtitle">MOVING TRAFFIC | SAVING LIVES.</span></h1>
           </div>
         </div>
 
         <div class="user-section">
-          <button type="button" class="help-btn" id="helpBtn" title="How to demo">?</button>
+          <button type="button" class="help-btn" id="helpBtn" onclick="document.getElementById('demoOverlay').classList.remove('hidden');" title="How to demo">?</button>
           <div class="status-badges" id="statusBadges"></div>
           <div class="time-display" id="uptime">00:00:00</div>
-          <div class="user-profile">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff&rounded=true" alt="Admin profile">
-            <span>Administrator</span>
-          </div>
         </div>
       </header>
 
       <div class="main-content">
         <aside class="sidebar left">
-          <div class="card">
+          <div class="card" id="cardVision">
             <div class="card-header">
-              <h3>Lane A Signal (Camera)</h3>
+              <h3>Lane A Signal (Vision)</h3>
             </div>
             <div class="traffic-light-container" id="trafficLightLeft">
               <div class="light red" data-color="RED"></div>
@@ -78,45 +83,40 @@
             </div>
           </div>
 
-          <div class="card status-card alert" id="multiEmergencyCard" style="display: none; border-color: var(--danger); box-shadow: 0 0 15px rgba(253, 93, 147, 0.4);">
-            <div class="card-icon alert-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <div class="card audio-card" id="cardAudio">
+            <div class="card-header">
+                <h3>Acoustic Sensor (Audio)</h3>
             </div>
-            <div class="card-content">
-              <h4>CRITICAL ALERT</h4>
-              <p class="status-value" style="color: var(--danger); font-size: 0.95rem; line-height: 1.4;">• Ambulance Detected<br>• Accident Occurred</p>
+            <div class="audio-controls">
+                <div class="audio-status" id="audioStatusText" style="font-family: monospace; color: var(--text-secondary); margin-bottom: 10px; font-size: 0.85rem;">Listening for Siren...</div>
+                <audio id="visibleAudioPlayer" controls style="width: 100%; height: 35px; border-radius: 5px; outline: none;"></audio>
             </div>
           </div>
 
-          <div class="card status-card warning" id="festivalStatusCard" style="display: none; border-color: var(--warning);">
-            <div class="card-icon warning-icon">
+          <div class="card status-card alert" id="ambulanceCard" style="display: none; border-color: var(--danger);">
+            <div class="card-icon alert-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div class="card-content">
+              <h4>Emergency Override</h4>
+              <p class="status-value" style="color: var(--danger); font-size: 0.95rem;">Ambulance (<span id="ambConfidence">0</span>%)</p>
+            </div>
+          </div>
+          
+          <div class="card status-card warning" id="festivalCard" style="display: none; border-color: var(--warning);">
+            <div class="card-icon warning-icon" style="background-color: rgba(255, 200, 0, 0.2); color: var(--warning);">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             </div>
             <div class="card-content">
-              <h4>Festival Mode</h4>
-              <p class="status-value" style="color: var(--warning); font-size: 0.95rem;">Extended Pedestrian Phase</p>
+              <h4>Procession Active</h4>
+              <p class="status-value" style="color: var(--warning); font-size: 0.95rem;">Festival Mode</p>
             </div>
           </div>
 
-          <div class="card india-modes-card">
-            <div class="card-header">
-              <h3>India Modes</h3>
-            </div>
-            <div class="modes-grid">
-              <div class="mode-item" id="greenCorridorItem">
-                <span class="mode-label">Green Corridor (Fire/Amb)</span>
-                <span class="mode-value" id="greenCorridorText">Inactive</span>
-              </div>
-              <div class="mode-item festival-mode-item">
-                <span class="mode-label">Festival Mode</span>
-                <button type="button" class="festival-toggle" id="festivalToggle" title="Toggle for processions/festivals">OFF</button>
-              </div>
-            </div>
-          </div>
         </aside>
 
         <section class="center-panel">
-          <div class="card video-card">
+          <div class="card video-card" id="videoContainer">
             <div class="card-header">
               <h3>Live Edge-AI Feed</h3>
               <div class="live-badge" id="liveBadge">
@@ -126,16 +126,12 @@
             <div class="video-wrapper" id="videoWrapper">
               <div class="video-loading" id="videoLoading">
                 <div class="spinner"></div>
-                <p>Connecting to feed...</p>
+                <p>Initializing AI Engine...</p>
               </div>
               <img id="liveFeed" src="{{ url_for('video_feed') }}" alt="Live webcam AI feed" />
-              <div class="video-error" id="videoError" style="display:none">
-                <p>Feed unavailable</p>
-                <p class="video-error-detail" id="videoErrorDetail"></p>
-              </div>
             </div>
           </div>
-          <div class="card log-card">
+          <div class="card log-card" id="cardLogs">
             <div class="card-header">
               <h3>System Events</h3>
             </div>
@@ -144,18 +140,18 @@
           <div class="card command-card">
             <div class="card-header">
               <h3>AI Command Panel</h3>
-              <span class="command-hint">Commands run on server. Type /help</span>
-            </div>
-            <div class="command-row">
-              <input type="text" id="commandInput" class="command-input" placeholder="/events, /demo, /config, /reload, /devices, /help" />
-              <button type="button" id="commandRun" class="command-run">Run</button>
+              <span class="command-hint">Type /help to view modules</span>
             </div>
             <div id="commandOutput" class="command-output"></div>
+            <div class="command-row">
+              <input type="text" id="commandInput" class="command-input" placeholder="/demo, /use image, /use video" autocomplete="off" />
+              <button type="button" id="commandRun" class="command-run">Run</button>
+            </div>
           </div>
         </section>
 
         <aside class="sidebar right">
-          <div class="card">
+          <div class="card" id="cardSim">
             <div class="card-header">
               <h3>Lane B Signal (Sim)</h3>
             </div>
@@ -182,16 +178,32 @@
             </div>
             <div class="metrics-grid">
               <div class="metric">
-                <span class="metric-label">Lane A Count</span>
+                <span class="metric-label">Lane A Count (Vision)</span>
                 <span class="metric-value" id="trafficCountA">0</span>
               </div>
               <div class="metric">
-                <span class="metric-label">Lane B Count</span>
+                <span class="metric-label">Lane B Count (Sim)</span>
                 <span class="metric-value" id="trafficCountB">0</span>
               </div>
               <div class="metric full-width">
                 <span class="metric-label">Active Phase Timer</span>
-                <span class="metric-value highlight countdown-display" id="countdownTimer" data-low="false" data-paused="false">0s</span>
+                <span class="metric-value highlight countdown-display" id="countdownTimer">0s</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card india-modes-card" id="indiaModesCard">
+            <div class="card-header">
+              <h3>India Modes</h3>
+            </div>
+            <div class="modes-grid">
+              <div class="mode-item festival-mode-item" style="border-bottom: 1px solid rgba(255,255,255,0.05); border-radius: 0; padding-bottom: 10px;">
+                <span class="mode-label" style="font-size: 0.8rem;">Strict Mode (Vision + Audio)</span>
+                <button type="button" class="festival-toggle" id="multimodalToggle" title="Require both Ambulance Sight and Siren Sound">OFF</button>
+              </div>
+              <div class="mode-item festival-mode-item" style="padding-top: 5px;">
+                <span class="mode-label" style="font-size: 0.8rem;">Festival Mode (Procession)</span>
+                <button type="button" class="festival-toggle" id="festivalToggle" title="Toggle for processions/festivals">OFF</button>
               </div>
             </div>
           </div>
@@ -204,9 +216,6 @@
                   <option value="all">All</option>
                   <option value="sos">SOS</option>
                   <option value="emergency">Fire/Amb</option>
-                  <option value="accident">Accident</option>
-                  <option value="animal">Animal</option>
-                  <option value="system">System</option>
                 </select>
                 <button type="button" class="events-refresh" id="eventsRefresh" title="Refresh">↻</button>
               </div>
@@ -216,6 +225,7 @@
         </aside>
       </div>
     </div>
+    
     <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>
