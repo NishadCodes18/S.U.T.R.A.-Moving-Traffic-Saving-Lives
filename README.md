@@ -1,3 +1,5 @@
+![SUTRA Logo](static/logo.png)
+
 # 🚦 S.U.T.R.A. — Smart Urban Traffic & Response Architecture
 ### **MOVING TRAFFIC | SAVING LIVES**
 
