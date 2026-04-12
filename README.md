@@ -9,7 +9,7 @@
 
 * **Instant Emergency Preemption (EVP):** Utilizes YOLOv8 Vision to detect emergency vehicles. The system actively calculates bounding box area to identify the single largest emergency proxy (ignoring background traffic) and instantly forces the lane to a GREEN signal, bypassing normal delay cycles.
 * **Strict Multi-Modal Fusion:** A configurable "Strict Mode" that requires *both* visual confirmation of an ambulance AND acoustic confirmation of a siren before overriding the signal, preventing false positives.
-* **Acoustic Siren Recognition:** Employs Fast Fourier Transform (FFT) and Z-score tonality filtering via SciPy to isolate emergency sirens from ambient city noise.
+* **Acoustic Siren Recognition:** Employs Fast Fourier Transform (FFT) and Z-score tonality filtering via SciPy to isolate emergency sirens from ambient city noise(adjust sound freq from config).
 * **Guardian Angel (SOS Signal):** Monitors the international "Signal for Help" hand gesture (Palm → Tuck Thumb → Make Fist) via MediaPipe to silently log distress events and alert authorities.
 * **India-Specific Intelligence:** Includes "Project Nandi" for animal hazard detection and a specialized "Festival Mode" (with an auto-spawning UI tab) for accommodating religious processions without breaking traffic flow.
 * **Interactive UI & Persistence:** Features a highly modern Dark Matrix UI with an interactive `/demo` tutorial sequence. The dashboard uses browser `localStorage` to perfectly remember your last loaded media feed even if the page refreshes.
