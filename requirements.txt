@@ -1,7 +1,7 @@
 flask==3.0.3
 opencv-python==4.10.0.84
 ultralytics==8.3.39
-mediapipe==0.10.14
+mediapipe==0.10.35
 numpy==1.26.4
 sounddevice==0.4.7
 scipy
